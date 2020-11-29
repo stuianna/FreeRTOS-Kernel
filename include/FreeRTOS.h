@@ -728,10 +728,43 @@
     #define traceSTREAM_BUFFER_RECEIVE_FROM_ISR( xStreamBuffer, xReceivedLength )
 #endif
 
-#ifndef configGENERATE_RUN_TIME_STATS
-    #define configGENERATE_RUN_TIME_STATS    0
+#ifdef USE_SYSTEMVIEW
+    #ifndef INCLUDE_pxTaskGetStackStart
+        #define INCLUDE_pxTaskGetStackStart 0
+    #endif
+
+    #ifndef traceREADDED_TASK_TO_READY_STATE
+        #define traceREADDED_TASK_TO_READY_STATE( pxTCB ) traceMOVED_TASK_TO_READY_STATE( pxTCB )
+    #endif
+
+    #ifndef traceISR_ENTER
+        #define traceISR_ENTER()
+    #endif
+
+    #ifndef traceISR_EXIT_TO_SCHEDULER
+        #define traceISR_EXIT_TO_SCHEDULER()
+    #endif
+
+    #ifndef traceISR_EXIT
+        #define traceISR_EXIT()
+    #endif
+
+    #ifndef traceMOVED_TASK_TO_SUSPENDED_LIST
+        #define traceMOVED_TASK_TO_SUSPENDED_LIST(x)
+    #endif
+
+    #ifndef traceMOVED_TASK_TO_OVERFLOW_DELAYED_LIST
+        #define traceMOVED_TASK_TO_OVERFLOW_DELAYED_LIST()
+    #endif
+
+    #ifndef traceMOVED_TASK_TO_DELAYED_LIST
+        #define traceMOVED_TASK_TO_DELAYED_LIST()
+    #endif
 #endif
 
+#ifndef configGENERATE_RUN_TIME_STATS
+    #define configGENERATE_RUN_TIME_STATS    0
+#endif
 #if ( configGENERATE_RUN_TIME_STATS == 1 )
 
     #ifndef portCONFIGURE_TIMER_FOR_RUN_TIME_STATS

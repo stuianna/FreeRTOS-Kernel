@@ -359,17 +359,29 @@ void xPortSysTickHandler( void )
     uint32_t ulPreviousMask;
 
     ulPreviousMask = portSET_INTERRUPT_MASK_FROM_ISR();
+#ifdef USE_SYSTEMVIEW
+	traceISR_ENTER();
+#endif
     {
         /* Increment the RTOS tick. */
         if( xTaskIncrementTick() != pdFALSE )
         {
+#ifdef USE_SYSTEMVIEW
+            traceISR_EXIT_TO_SCHEDULER();
+#endif
             /* Pend a context switch. */
             portNVIC_INT_CTRL_REG = portNVIC_PENDSVSET_BIT;
         }
+#ifdef USE_SYSTEMVIEW
+		else
+		{
+			traceISR_EXIT();
+		}
+#endif
+            /* Pend a context switch. */
     }
     portCLEAR_INTERRUPT_MASK_FROM_ISR( ulPreviousMask );
-}
-/*-----------------------------------------------------------*/
+}/*-----------------------------------------------------------*/
 
 /*
  * Setup the systick timer to generate the tick interrupts at the required

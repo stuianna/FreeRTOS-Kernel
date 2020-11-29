@@ -90,11 +90,14 @@
 
     #define portNVIC_INT_CTRL_REG     ( *( ( volatile uint32_t * ) 0xe000ed04 ) )
     #define portNVIC_PENDSVSET_BIT    ( 1UL << 28UL )
+#ifdef USE_SYSTEMVIEW
+    #define portEND_SWITCHING_ISR( xSwitchRequired ) { if( xSwitchRequired != pdFALSE ) { traceISR_EXIT_TO_SCHEDULER(); portYIELD(); } else { traceISR_EXIT(); } }
+#else
     #define portEND_SWITCHING_ISR( xSwitchRequired )    if( xSwitchRequired != pdFALSE ) portYIELD()
+#endif
     #define portYIELD_FROM_ISR( x )                     portEND_SWITCHING_ISR( x )
 /*-----------------------------------------------------------*/
-
-/* Critical section management. */
+/* Critical section management. */
     extern void vPortEnterCritical( void );
     extern void vPortExitCritical( void );
     #define portSET_INTERRUPT_MASK_FROM_ISR()         ulPortRaiseBASEPRI()
